@@ -1830,6 +1830,29 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(76, 29, 149, 0.25);
         }
+        .ai-report-card.compact .ai-report-content {
+            max-height: 220px;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+        }
+        .ai-report-card.compact.expanded .ai-report-content {
+            max-height: none;
+            -webkit-mask-image: none;
+            mask-image: none;
+        }
+        .ai-report-toggle {
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px 14px;
+            border: 1px solid rgba(167,139,250,0.28);
+            border-radius: 12px;
+            background: rgba(167,139,250,0.1);
+            color: #ddd6fe;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
         .ai-report-card::before {
             content: '';
             position: absolute;
@@ -2604,6 +2627,27 @@
             0%, 100% { box-shadow: 0 8px 24px rgba(16,185,129,0.4), 0 0 0 1px rgba(52,211,153,0.35) inset; }
             50% { box-shadow: 0 14px 36px rgba(16,185,129,0.6), 0 0 0 1px rgba(52,211,153,0.55) inset; }
         }
+        .executive-cta-strip {
+            margin-top: 13px;
+            padding: 12px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.14), rgba(34,211,238,0.08));
+            border: 1px solid rgba(52,211,153,0.24);
+        }
+        .executive-cta-strip .cta-main-btn {
+            margin-top: 0;
+            padding: 13px 12px;
+            border-radius: 14px;
+            font-size: 14px;
+            animation: none;
+        }
+        .executive-cta-note {
+            margin-top: 7px;
+            text-align: center;
+            color: rgba(255,255,255,0.58);
+            font-size: 11px;
+            line-height: 1.55;
+        }
 
         /* === 报告页紧凑模式（减少整体空白，约 35%） === */
         #page-report .min-h-screen.px-6.py-8 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
@@ -2672,6 +2716,55 @@
             border-radius: 999px;
             background: linear-gradient(90deg, #a78bfa, #22d3ee);
             box-shadow: 0 0 12px rgba(34,211,238,0.3);
+        }
+        .report-secondary-metrics,
+        .report-duplicate-summary,
+        .report-big-stats,
+        .report-type-card,
+        .report-case-section {
+            display: none !important;
+        }
+        .report-evidence-card {
+            background: linear-gradient(135deg, rgba(15,23,42,0.78), rgba(30,27,75,0.62));
+            border: 1px solid rgba(96,165,250,0.22);
+            border-radius: 18px;
+            padding: 16px;
+        }
+        .report-evidence-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .report-evidence-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 900;
+        }
+        .report-evidence-sub {
+            color: rgba(255,255,255,0.48);
+            font-size: 12px;
+            line-height: 1.55;
+            margin-top: 3px;
+        }
+        .report-detail-toggle {
+            border: 1px solid rgba(96,165,250,0.28);
+            background: rgba(96,165,250,0.1);
+            color: #bfdbfe;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .report-detail-body {
+            display: none;
+            margin-top: 12px;
+        }
+        .report-detail-body.expanded {
+            display: block;
         }
         /* === 新版报告首屏：结论优先 + 转化导向 === */
         .executive-report-panel {
@@ -3529,11 +3622,20 @@
                             <span><b>图表不是重点</b>，重点是让你知道先处理哪一步。</span>
                         </div>
                     </div>
+
+                    <div class="executive-cta-strip">
+                        <button type="button" onclick="openCustomerService()" class="cta-main-btn">
+                            <span>💬</span>
+                            <span>把报告发给我，帮你判断先调哪一步</span>
+                            <span class="cta-main-btn-arrow">→</span>
+                        </button>
+                        <div class="executive-cta-note">不用填表 · 加微信后发“我测完了 + 报告截图”</div>
+                    </div>
                 </div>
             </div>
 
             <!-- AI 总控面板：先给用户一眼扫完的核心仪表盘 -->
-            <div class="mb-6 animate-fadeInUp" style="animation-delay: 0.17s;">
+            <div class="mb-6 animate-fadeInUp report-secondary-metrics" style="animation-delay: 0.17s;">
                 <div style="background:linear-gradient(135deg,rgba(15,23,42,0.82),rgba(30,27,75,0.72));border:1px solid rgba(96,165,250,0.26);box-shadow:0 18px 45px rgba(0,0,0,0.24), inset 0 0 28px rgba(34,211,238,0.06);border-radius:18px;padding:16px;">
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;">
                         <div>
@@ -3564,7 +3666,7 @@
             </div>
 
             <!-- 结尾提示 -->
-            <div class="mb-6 animate-fadeInUp" style="animation-delay: 0.18s;">
+            <div class="mb-6 animate-fadeInUp report-duplicate-summary" style="animation-delay: 0.18s;">
                 <div style="padding:16px 20px;background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(59,130,246,0.08));border:1px solid rgba(167,139,250,0.2);border-radius:16px;text-align:center;">
                     <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:6px;">📌 初步筛查结果</div>
                     <div style="font-size:16px;color:#fff;font-weight:700;line-height:1.5;" id="report-summary">你的失眠主因可能是：<span class="gradient-text" id="summary-type">--</span></div>
@@ -3610,7 +3712,7 @@
             </div>
 
             <!-- Big Stats Grid -->
-            <div class="grid grid-cols-2 gap-3 mb-8 animate-fadeInUp" style="animation-delay: 0.2s;">
+            <div class="grid grid-cols-2 gap-3 mb-8 animate-fadeInUp report-big-stats" style="animation-delay: 0.2s;">
                 <div class="glass-card p-4 text-center">
                     <div class="stat-number" id="sleep-debt">0</div>
                     <div class="text-xs text-gray-400 mt-2">睡眠债指数</div>
@@ -3671,24 +3773,32 @@
 
             <!-- Visual Analysis -->
             <div class="mb-8 animate-fadeInUp" style="animation-delay: 0.28s;">
-                <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <span>📊</span> <span>测试结果<span class="gradient-text">可视化</span></span>
-                    </h2>
-                    <span id="viz-risk-level" class="text-xs px-3 py-1 rounded-full bg-dream-400/10 border border-dream-400/25 text-dream-200">AI 分析</span>
-                </div>
-                <div class="report-viz-grid">
-                    <div class="report-viz-panel">
-                        <div class="report-viz-title">🕸️ 五维根因雷达</div>
-                        <canvas id="root-radar-chart" class="report-viz-canvas" width="280" height="230"></canvas>
-                    </div>
-                    <div class="report-viz-panel">
-                        <div class="report-viz-title">🌙 睡眠债仪表盘</div>
-                        <canvas id="sleep-debt-gauge" class="report-viz-canvas" width="280" height="230"></canvas>
+                <div class="report-evidence-card">
+                    <div class="report-evidence-head">
+                        <div>
+                            <div class="report-evidence-title">为什么这么判断</div>
+                            <div class="report-evidence-sub">默认先看证据摘要，图表放在展开区，避免报告一上来太满。</div>
+                        </div>
+                        <button type="button" class="report-detail-toggle" onclick="toggleReportDetail('report-viz-detail', this)">展开图表</button>
                     </div>
                     <div class="report-viz-panel wide">
                         <div class="report-viz-title">⚡ 前三大影响因素</div>
                         <div id="top-factor-bars"></div>
+                    </div>
+                    <div class="report-detail-body" id="report-viz-detail">
+                        <div class="flex items-center justify-between mb-3" style="margin-top:12px;">
+                            <span id="viz-risk-level" class="text-xs px-3 py-1 rounded-full bg-dream-400/10 border border-dream-400/25 text-dream-200">AI 分析</span>
+                        </div>
+                        <div class="report-viz-grid">
+                            <div class="report-viz-panel">
+                                <div class="report-viz-title">🕸️ 五维根因雷达</div>
+                                <canvas id="root-radar-chart" class="report-viz-canvas" width="280" height="230"></canvas>
+                            </div>
+                            <div class="report-viz-panel">
+                                <div class="report-viz-title">🌙 睡眠债仪表盘</div>
+                                <canvas id="sleep-debt-gauge" class="report-viz-canvas" width="280" height="230"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3699,7 +3809,7 @@
             </div>
 
             <!-- Type tag -->
-            <div class="glass-card p-4 mb-8 animate-fadeInUp" style="animation-delay: 0.3s;">
+            <div class="glass-card p-4 mb-8 animate-fadeInUp report-type-card" style="animation-delay: 0.3s;">
                 <div class="text-xs text-gray-400 mb-2">❶ 你的失眠原因可能是</div>
                 <div class="text-xl font-bold text-white leading-snug" id="insomnia-type" style="word-break:break-all;">焦虑早醒型</div>
                 <div class="text-xs text-dream-300 mt-2" id="type-rate">同类人群中占 12%</div>
@@ -3767,7 +3877,7 @@
 
             <!-- Section: AI 深度解读（GLM-4 生成） -->
             <div class="animate-fadeInUp" style="animation-delay: 0.5s;">
-                <div class="ai-report-card" id="ai-report-card">
+                <div class="ai-report-card compact" id="ai-report-card">
                     <div class="ai-report-header">
                         <div class="ai-report-icon">🧠</div>
                         <div class="flex-1">
@@ -3793,6 +3903,7 @@
                             </div>
                         </div>
                     </div>
+                    <button type="button" class="ai-report-toggle" id="ai-report-toggle" onclick="toggleAIReport()">展开完整 AI 解读</button>
                 </div>
             </div>
 
@@ -3827,7 +3938,7 @@
             </div>
 
             <!-- 🔥 同类型用户改善案例（匿名数据·提升信任感） -->
-            <div class="mb-6 animate-fadeInUp" style="animation-delay: 0.7s;">
+            <div class="mb-6 animate-fadeInUp report-case-section" style="animation-delay: 0.7s;">
                 <div style="background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(16,185,129,0.06));border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:18px 16px;">
                     <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
                         <span>📊</span> 和你同类型的人·后来怎么样了？
@@ -5454,6 +5565,21 @@
             if (!modal) return;
             modal.classList.remove('show');
             setTimeout(() => modal.remove(), 220);
+        }
+
+        function toggleReportDetail(id, btn) {
+            const body = document.getElementById(id);
+            if (!body) return;
+            const expanded = body.classList.toggle('expanded');
+            if (btn) btn.textContent = expanded ? '收起图表' : '展开图表';
+        }
+
+        function toggleAIReport() {
+            const card = document.getElementById('ai-report-card');
+            const btn = document.getElementById('ai-report-toggle');
+            if (!card) return;
+            const expanded = card.classList.toggle('expanded');
+            if (btn) btn.textContent = expanded ? '收起完整 AI 解读' : '展开完整 AI 解读';
         }
 
         // ==================== 选择选项 ====================
