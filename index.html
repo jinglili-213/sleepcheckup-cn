@@ -2727,6 +2727,48 @@
         .report-secondary-section {
             display: none !important;
         }
+        .report-secondary-section.report-keep-compact {
+            display: block !important;
+        }
+        .report-recovery-compact > div {
+            padding: 14px 14px !important;
+        }
+        .report-recovery-compact h2 {
+            font-size: 1rem !important;
+        }
+        .report-recovery-compact h2 + p {
+            display: none;
+        }
+        .report-recovery-compact [style*="display:grid"] {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+            margin-bottom: 8px !important;
+        }
+        .report-recovery-compact [style*="display:grid"] > div:nth-child(3) {
+            grid-column: 1 / -1;
+        }
+        .report-recovery-compact #recovery-summary {
+            margin-bottom: 0 !important;
+        }
+        .report-recovery-compact #recovery-summary + div {
+            display: none !important;
+        }
+        .report-deep-sleep-compact {
+            display: block !important;
+            margin-top: -0.25rem;
+        }
+        .report-deep-sleep-compact #deep-sleep-hint {
+            padding: 10px 12px;
+            border: 1px solid rgba(167,139,250,0.16);
+            border-radius: 12px;
+            background: rgba(167,139,250,0.055);
+            color: rgba(255,255,255,0.48) !important;
+            font-size: 11px !important;
+            text-align: left;
+        }
+        .report-deep-sleep-compact #deep-sleep-hint br {
+            display: none;
+        }
         .report-header-compact {
             margin-bottom: 0.75rem !important;
         }
@@ -3747,7 +3789,7 @@
             </div>
 
             <!-- Section: 睡醒后恢复感分析 -->
-            <div class="mb-8 animate-fadeInUp report-secondary-section" style="animation-delay: 0.24s;">
+            <div class="mb-8 animate-fadeInUp report-secondary-section report-keep-compact report-recovery-compact" style="animation-delay: 0.24s;">
                 <div style="background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(59,130,246,0.07));border:1px solid rgba(34,197,94,0.22);border-radius:16px;padding:18px 16px;">
                     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;">
                         <div>
@@ -3825,7 +3867,7 @@
             </div>
 
             <!-- Deep sleep education hint -->
-            <div class="text-center mb-6 animate-fadeInUp report-secondary-section" style="animation-delay: 0.25s;">
+            <div class="text-center mb-6 animate-fadeInUp report-secondary-section report-keep-compact report-deep-sleep-compact" style="animation-delay: 0.25s;">
                 <div class="text-xs text-gray-500 leading-relaxed" id="deep-sleep-hint">💤 正常成人 8 小时睡眠中，<b class="text-dream-300">深度睡眠应达 1-2 小时（占 15%-25%）</b>，你的深睡时长可能远低于此<br><span style="color:#a78bfa;">⌚ 建议用手环/手表记录一周，看看你的真实深睡时长</span></div>
             </div>
 
