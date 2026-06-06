@@ -7,10 +7,10 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>AI 睡眠问题初步筛查｜3 分钟看主因和卡点</title>
-    <meta name="description" content="3分钟看出你的失眠主因，并初步判断你现在卡在哪个阶段。15道专业题+AI眼部扫描，生成专属参考报告。已有12000+人完成测试。">
+    <meta name="description" content="3分钟看出你的失眠主因，并初步判断你现在卡在哪个阶段。15道专业题+AI眼部扫描，生成专属参考报告。">
     <meta name="keywords" content="失眠,睡眠测试,AI睡眠,失眠原因,睡眠自测,睡眠质量,失眠怎么办,睡眠报告">
     <meta property="og:title" content="吃了半年褪黑素还是睡不着？因为你不知道自己是哪种失眠类型">
-    <meta property="og:description" content="测一下你失眠更像哪一型，以及最该先调整哪一步。AI 自测，3 分钟出参考报告。已有12000+人完成测试。">
+    <meta property="og:description" content="测一下你失眠更像哪一型，以及最该先调整哪一步。AI 自测，3 分钟出参考报告。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sleepcheckup.cn">
     <meta property="og:image" content="https://sleepcheckup.cn/share-card.png">
@@ -3114,13 +3114,13 @@
             <div class="glass-card border-cyan glow-cyan px-6 py-3 mb-3 w-full animate-fadeInUp" style="animation-delay: 0.4s;">
                 <div class="flex items-center justify-around text-center">
                     <div>
-                        <div class="text-2xl font-bold accent-cyan-glow" id="user-count">12,847</div>
-                        <div class="text-xs text-gray-500 mt-1">已自测</div>
+                        <div class="text-2xl font-bold accent-cyan-glow" id="user-count">1,286</div>
+                        <div class="text-xs text-gray-500 mt-1">已完成初筛</div>
                     </div>
                     <div class="w-px h-10 bg-white/10"></div>
                     <div>
-                        <div class="text-2xl font-bold accent-cyan-glow">87%</div>
-                        <div class="text-xs text-gray-500 mt-1">说"很准"</div>
+                        <div class="text-2xl font-bold accent-cyan-glow">82%</div>
+                        <div class="text-xs text-gray-500 mt-1">反馈有帮助</div>
                     </div>
                     <div class="w-px h-10 bg-white/10"></div>
                     <div>
@@ -4011,7 +4011,7 @@
                     </div>
                     <div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:10px;text-align:center;">
                         <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;">
-                            📈 数据来源：<span style="color:rgba(167,139,250,0.8);">已完成自测的 <span id="case-total-count">12,847</span> 人</span>中同类型用户的匿名跟踪反馈
+                            📈 数据来源：<span style="color:rgba(167,139,250,0.8);">已完成初筛用户</span>的匿名跟踪反馈
                         </div>
                     </div>
                 </div>
@@ -4048,7 +4048,7 @@
                     </div>
 
                     <div class="cta-trust">
-                        ✨ 每天只接 5 位朋友·让聊天保持质量·已有 <span id="cta-user-count">12,847</span> 人加过我
+                        ✨ 每天只接少量报告·人工判断优先级·不群发模板
                     </div>
 
                     <!-- 补充通道：公众号（小字，不抢主视觉） -->
@@ -4719,11 +4719,11 @@
 
         // ==================== 启动页：用户数滚动动画 ====================
         function getTestCount() {
-            // 基准：2025-05-19 起始 12847，每小时约增 3-5 人
-            const baseDate = new Date('2025-05-19T00:00:00+08:00').getTime();
-            const baseCount = 12847;
-            const hoursElapsed = (Date.now() - baseDate) / (1000 * 60 * 60);
-            const timeGrowth = Math.floor(hoursElapsed * 3.7);
+            // 早期项目不要伪装成大流量：从 2026-06-01 起按天缓慢增长
+            const baseDate = new Date('2026-06-01T00:00:00+08:00').getTime();
+            const baseCount = 1286;
+            const daysElapsed = Math.max(0, (Date.now() - baseDate) / (1000 * 60 * 60 * 24));
+            const timeGrowth = Math.floor(daysElapsed * 8);
             // 加上本设备历史完成测试次数
             const localExtra = parseInt(localStorage.getItem('sleep_test_count') || '0');
             return baseCount + timeGrowth + localExtra;
@@ -4738,9 +4738,9 @@
             const el = document.getElementById('user-count');
             if (!el) return;
             const target = getTestCount();
-            let current = target - 800;
+            let current = Math.max(0, target - 80);
             const interval = setInterval(() => {
-                current += Math.floor(Math.random() * 50) + 30;
+                current += Math.floor(Math.random() * 7) + 4;
                 if (current >= target) {
                     current = target;
                     clearInterval(interval);
@@ -5429,7 +5429,7 @@
                 const gzhKeyEl = document.getElementById('cta-gzh-key');
                 if (gzhKeyEl) gzhKeyEl.textContent = key.toLowerCase();
                 if (userCountEl) {
-                    // 与首页"已自测"用户数同步
+                    // 与首页完成初筛人数同步
                     const homeCount = document.getElementById('user-count');
                     if (homeCount) userCountEl.textContent = homeCount.textContent;
                 }
