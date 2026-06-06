@@ -1000,7 +1000,7 @@
         .sound-toggle-btn:active { transform: scale(0.95); }
         .sound-toggle-btn.muted #sound-icon { opacity: 0.4; }
 
-        /* === 找老师解读：留资弹窗 === */
+        /* === 找老师解读：微信二维码弹窗 === */
         .consult-modal {
             position: fixed; inset: 0;
             z-index: 9999;
@@ -1072,6 +1072,50 @@
             color: #b0aecf;
             line-height: 1.55;
             padding: 0 8px;
+        }
+        .consult-qr-wrap {
+            padding: 0 22px 8px;
+            text-align: center;
+        }
+        .consult-qr-card {
+            display: inline-block;
+            max-width: 100%;
+            padding: 14px 14px 12px;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+        }
+        .consult-qr-card img {
+            width: 190px;
+            height: 190px;
+            display: block;
+            border-radius: 10px;
+            margin: 0 auto;
+        }
+        .consult-qr-tip {
+            margin-top: 9px;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .consult-qr-steps {
+            max-width: 320px;
+            margin: 12px auto 0;
+            color: #c7c4e6;
+            font-size: 13px;
+            line-height: 1.75;
+        }
+        .consult-qr-steps b {
+            color: #fff;
+            font-weight: 800;
+        }
+        .consult-qr-note {
+            display: inline-block;
+            margin-top: 9px;
+            color: #a78bfa;
+            font-size: 12px;
+            font-weight: 700;
         }
         .consult-modal-body { padding: 4px 0; }
         .consult-field {
@@ -2713,7 +2757,12 @@
             font-size: 15px;
             font-weight: 900;
             line-height: 1.25;
-            word-break: keep-all;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .executive-main-type-card .executive-score-value {
+            font-size: 14px;
+            line-height: 1.35;
         }
         .executive-score-value.warn { color: #fde68a; }
         .executive-score-value.alert { color: #fca5a5; }
@@ -2776,10 +2825,23 @@
             background: rgba(167,139,250,0.32);
             border: 1px solid rgba(167,139,250,0.28);
         }
+        @media (max-width: 520px) {
+            .executive-score-grid {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            }
+            .executive-main-type-card {
+                grid-column: 1 / -1;
+                order: 2;
+                padding: 12px 14px;
+            }
+            .executive-main-type-card .executive-score-value {
+                font-size: 16px;
+                max-width: 100%;
+            }
+        }
         @media (max-width: 380px) {
             .report-viz-grid { grid-template-columns: 1fr; }
             .report-viz-panel.wide { grid-column: auto; }
-            .executive-score-grid { grid-template-columns: 1fr; }
             .executive-title { font-size: 22px; }
         }
         /* 验证清单 ◻️ —— 每条独占一行，方框左对齐 */
@@ -3441,7 +3503,7 @@
                             <div class="executive-score-label">睡眠债</div>
                             <div class="executive-score-value warn" id="executive-sleep-debt">--%</div>
                         </div>
-                        <div class="executive-score-card">
+                        <div class="executive-score-card executive-main-type-card">
                             <div class="executive-score-label">主因类型</div>
                             <div class="executive-score-value" id="executive-main-type">分析中</div>
                         </div>
@@ -5261,7 +5323,7 @@
                         header: { title: { tag: 'plain_text', content: cardTitle }, template: cardTemplate },
                         elements: [{
                             tag: 'div',
-                            text: { tag: 'lark_md', content: `**客户信息**：${gender}，${age}岁，失眠${duration}\n**主因类型**：${typeName}\n**睡眠债**：${sleepDebt}h | **睡眠年龄**：${sleepAge}岁${riskLine}\n\n⏰ 客户刚点了"返回微信"，马上会发消息给你！` }
+                            text: { tag: 'lark_md', content: `**客户信息**：${gender}，${age}岁，失眠${duration}\n**主因类型**：${typeName}\n**睡眠债**：${sleepDebt}h | **睡眠年龄**：${sleepAge}岁${riskLine}\n\n⏰ 客户刚点了"加微信解读"，可能马上会发消息给你！` }
                         }]
                     }
                 };
@@ -5320,26 +5382,16 @@
             try { trackEvent('6_点击公众号引导'); } catch(_) {}
         }
 
-        // ==================== 找老师解读：留资弹窗（合规 + 飞书推送） ====================
+        // ==================== 找老师解读：二维码弹窗（低摩擦 + 飞书推送） ====================
         function openCustomerService() {
-            // 微信内置浏览器：发通知 + 关闭页面回到对话
+            notifyConsultClick();
+
+            // 微信内置浏览器：长按二维码识别更顺手
             if (isWeChatBrowser()) {
-                notifyConsultClick();
-                // 显示引导提示
-                const overlay = document.createElement('div');
-                overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(8,6,20,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;';
-                overlay.innerHTML = `
-                    <div style="font-size:40px;margin-bottom:10px;">🎁</div>
-                    <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">长按识别二维码·加我领方案</div>
-                    <div style="background:#fff;padding:14px;border-radius:16px;margin-bottom:14px;">
-                        <img src="wechat-qr.jpg" alt="晚晚的微信二维码" style="width:200px;height:200px;display:block;border-radius:8px;" />
-                    </div>
-                    <div style="font-size:13px;color:#b0aecf;line-height:1.7;margin-bottom:20px;text-align:center;">长按图片 → <b style="color:#fff;">识别图中二维码</b><br>加我后发<b style="color:#fff;">「我测完了」</b>+ 报告截图<br>我做 1对1 解读 + 发对应类型 PDF<br><span style="color:#a78bfa;">仅限完成自测的用户 · 不推销</span></div>
-                    <button onclick="closeWeChatPage()" style="padding:12px 36px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;border-radius:28px;font-size:15px;font-weight:700;cursor:pointer;">已加 · 关闭页面</button>
-                `;
-                document.body.appendChild(overlay);
+                openWeChatQrOverlay();
                 return;
             }
+
             // 防止重复创建
             if (document.getElementById('consult-modal')) {
                 document.getElementById('consult-modal').classList.add('show');
@@ -5355,60 +5407,46 @@
                     <div class="consult-modal-close" onclick="closeConsultModal()">×</div>
                     <div class="consult-modal-header">
                         <div class="consult-modal-icon">🌙</div>
-                        <div class="consult-modal-title">加我微信 · 领取你的专属方案</div>
-                        <div class="consult-modal-sub">扫码加微信 / 留下你的微信号·我主动加你</div>
+                        <div class="consult-modal-title">加我微信 · 做 1 对 1 报告解读</div>
+                        <div class="consult-modal-sub">不用填表，直接扫码加我，把报告截图发来就行</div>
                     </div>
 
-                    <div style="padding:0 22px 8px;text-align:center;">
-                        <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:14px 14px 10px;display:inline-block;max-width:100%;">
-                            <img src="wechat-qr.jpg" alt="晚晚的微信" style="width:170px;height:170px;display:block;border-radius:8px;margin:0 auto;" />
-                            <div style="font-size:12px;color:#64748b;margin-top:8px;font-weight:600;">📱 微信扫一扫 · 加我领方案</div>
+                    <div class="consult-qr-wrap">
+                        <div class="consult-qr-card">
+                            <img src="wechat-qr.jpg" alt="晚晚的微信二维码" />
+                            <div class="consult-qr-tip">微信扫一扫 · 加我解读报告</div>
                         </div>
-                        <div style="font-size:11px;color:#9ca3af;margin-top:8px;">扫不上？也可以留下微信号 · 我加你 ↓</div>
-                    </div>
-
-                    <div class="consult-modal-body">
-                        <div class="consult-field">
-                            <label>你的微信号 <span style="color:#f87171">*</span></label>
-                            <input type="text" id="consult-wechat" maxlength="40"
-                                   placeholder="请输入微信号，方便顾问添加你">
+                        <div class="consult-qr-steps">
+                            扫码后发送 <b>我测完了 + 报告截图</b><br>
+                            我帮你判断当前卡点，告诉你先调哪一步
                         </div>
-                        <div class="consult-field">
-                            <label>怎么称呼你（选填）</label>
-                            <input type="text" id="consult-name" maxlength="20"
-                                   placeholder="昵称 / 称呼，如「小李」">
-                        </div>
-                        <div class="consult-field">
-                            <label>想优先咨询什么（选填）</label>
-                            <textarea id="consult-note" rows="2" maxlength="200"
-                                      placeholder="例：吃过褪黑素没用 / 半夜 3 点准时醒..."></textarea>
-                        </div>
-
-                        <label class="consult-agree">
-                            <input type="checkbox" id="consult-agree-cb">
-                            <span>我同意将本次测评报告与上述联系方式发送给睡眠顾问，便于 TA 在 24 小时内联系我并提供 1V1 解读服务</span>
-                        </label>
-
-                        <div id="consult-error" class="consult-error" style="display:none"></div>
+                        <span class="consult-qr-note">仅限完成自测用户 · 不推销</span>
                     </div>
 
-                    <div class="consult-modal-footer">
-                        <button class="consult-btn-cancel" type="button" onclick="closeConsultModal()">再想想</button>
-                        <button class="consult-btn-submit" type="button" id="consult-submit-btn" onclick="submitConsultation()">
-                            📨 发送给顾问
-                        </button>
-                    </div>
-
-                    <div class="consult-success" id="consult-success" style="display:none">
-                        <div class="consult-success-icon">✅</div>
-                        <div class="consult-success-title">预约成功</div>
-                        <div class="consult-success-desc">你的测评报告已同步给睡眠顾问<br>顾问将在 <strong>24 小时内</strong>通过微信联系你<br>帮你判断当前类型、卡点和优先调整方向</div>
-                        <button class="consult-btn-cancel" style="margin-top:18px" type="button" onclick="closeConsultModal()">好的，等顾问联系我</button>
-                    </div>
+                    <button class="consult-btn-submit" type="button" style="width:100%;margin-top:18px;" onclick="closeConsultModal()">我知道了</button>
                 </div>
             `;
             document.body.appendChild(modal);
             requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('show')));
+        }
+
+        function openWeChatQrOverlay() {
+            const exist = document.getElementById('wechat-qr-overlay');
+            if (exist) { exist.style.display = 'flex'; return; }
+
+            const overlay = document.createElement('div');
+            overlay.id = 'wechat-qr-overlay';
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(8,6,20,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;';
+            overlay.innerHTML = `
+                <div style="font-size:40px;margin-bottom:10px;">🎁</div>
+                <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">长按识别二维码 · 加我解读报告</div>
+                <div style="background:#fff;padding:14px;border-radius:16px;margin-bottom:14px;">
+                    <img src="wechat-qr.jpg" alt="晚晚的微信二维码" style="width:200px;height:200px;display:block;border-radius:8px;" />
+                </div>
+                <div style="font-size:13px;color:#b0aecf;line-height:1.7;margin-bottom:20px;text-align:center;">长按图片 → <b style="color:#fff;">识别图中二维码</b><br>加我后发 <b style="color:#fff;">我测完了 + 报告截图</b><br>我做 1 对 1 解读，帮你判断先调哪一步<br><span style="color:#a78bfa;">仅限完成自测用户 · 不推销</span></div>
+                <button onclick="closeWeChatPage()" style="padding:12px 36px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;border-radius:28px;font-size:15px;font-weight:700;cursor:pointer;">已加 · 关闭页面</button>
+            `;
+            document.body.appendChild(overlay);
         }
 
         function closeConsultModal() {
@@ -5416,72 +5454,6 @@
             if (!modal) return;
             modal.classList.remove('show');
             setTimeout(() => modal.remove(), 220);
-        }
-
-        async function submitConsultation() {
-            const wechat = (document.getElementById('consult-wechat').value || '').trim();
-            const name = (document.getElementById('consult-name').value || '').trim();
-            const note = (document.getElementById('consult-note').value || '').trim();
-            const agreed = document.getElementById('consult-agree-cb').checked;
-            const errEl = document.getElementById('consult-error');
-            const submitBtn = document.getElementById('consult-submit-btn');
-
-            const showErr = (msg) => {
-                errEl.textContent = msg;
-                errEl.style.display = 'block';
-            };
-            errEl.style.display = 'none';
-
-            if (!wechat) return showErr('请填写微信号，否则顾问无法联系到你');
-            if (wechat.length < 3) return showErr('微信号至少 3 个字符');
-            if (!agreed) return showErr('请勾选同意条款，我们会严格保护你的隐私');
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = '发送中...';
-
-            // 组装 payload
-            const rd = window.reportData || {};
-            const payload = {
-                contact: { wechat, name: name || null, note: note || null },
-                userInfo: rd.userInfo || {},
-                topReasons: rd.topReasons || [],
-                eyeScanData: rd.eyeScanData || null,
-                extraSignals: rd.extraSignals || null,
-                reportMarkdown: window.__lastReportMarkdown || '（报告尚未生成完成）',
-                clientTime: new Date().toISOString()
-            };
-
-            try {
-                // 本地 Mock 模式：无后端时模拟成功（仅在 console 打印 payload）
-                if (AI_USE_MOCK) {
-                    console.log('[留资·Mock] payload:', JSON.stringify(payload, null, 2));
-                    await new Promise(r => setTimeout(r, 800));
-                } else {
-                    const endpoint = AI_BACKEND_URL
-                        ? AI_BACKEND_URL.replace(/\/generate-report$/, '/submit-consultation')
-                        : '/api/submit-consultation';
-                    const res = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!res.ok) {
-                        const txt = await res.text().catch(() => '');
-                        throw new Error(`服务异常 (${res.status}) ${txt.slice(0, 80)}`);
-                    }
-                }
-                // 成功：切到成功态
-                SoundFX.fx.chime();
-                document.querySelector('#consult-modal .consult-modal-body').style.display = 'none';
-                document.querySelector('#consult-modal .consult-modal-footer').style.display = 'none';
-                document.querySelector('#consult-modal .consult-modal-header').style.display = 'none';
-                document.getElementById('consult-success').style.display = 'block';
-            } catch (err) {
-                console.error('[留资] 提交失败：', err);
-                showErr(`发送失败：${err.message || '网络异常'}，请稍后重试或直接联系客服`);
-                submitBtn.disabled = false;
-                submitBtn.textContent = '📨 发送给顾问';
-            }
         }
 
         // ==================== 选择选项 ====================
